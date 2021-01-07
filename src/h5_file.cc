@@ -93,8 +93,6 @@ namespace NodeHDF5 {
         throw  Exception(ss.str());
         return;
       }
-      printf("%d\n", flags);
-      printf("%d\n", H5F_ACC_SWMR_READ);
       if(flags == H5F_ACC_SWMR_READ){
 	id = H5Fopen(path, H5F_ACC_RDONLY | H5F_ACC_SWMR_READ, H5P_DEFAULT);
       }else{
