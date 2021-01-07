@@ -59,6 +59,7 @@ namespace NodeHDF5 {
     static void EnableSingleWriteMultiRead(const v8::FunctionCallbackInfo<Value>& args);
     static void CreateGroup(const v8::FunctionCallbackInfo<Value>& args);
     static void OpenGroup(const v8::FunctionCallbackInfo<Value>& args);
+    static void OpenDataset(const v8::FunctionCallbackInfo<Value>& args);
     static void Move(const v8::FunctionCallbackInfo<Value>& args);
     static void Delete(const v8::FunctionCallbackInfo<Value>& args);
     static void Close(const v8::FunctionCallbackInfo<Value>& args);

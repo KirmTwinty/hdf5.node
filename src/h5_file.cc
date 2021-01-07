@@ -11,6 +11,7 @@
 #include "hdf5V8.hpp"
 #include "file.h"
 #include "group.h"
+#include "dataset.h"
 #include "int64.hpp"
 
 #include "H5Lpublic.h"
@@ -92,7 +93,13 @@ namespace NodeHDF5 {
         throw  Exception(ss.str());
         return;
       }
-      id = H5Fopen(path, flags, H5P_DEFAULT);
+      printf("%d\n", flags);
+      printf("%d\n", H5F_ACC_SWMR_READ);
+      if(flags == H5F_ACC_SWMR_READ){
+	id = H5Fopen(path, H5F_ACC_RDONLY | H5F_ACC_SWMR_READ, H5P_DEFAULT);
+      }else{
+	id = H5Fopen(path, flags, H5P_DEFAULT);
+      }
       if (id < 0) {
         std::stringstream ss;
         ss << "Failed to open file, " << path << " and flags " << flags << " with return: " << id << ".";
@@ -136,6 +143,7 @@ namespace NodeHDF5 {
     setPrototypeMethod(isolate, t, v8::String::NewFromUtf8(isolate, "enableSingleWriteMultiRead", v8::NewStringType::kInternalized).ToLocalChecked(), EnableSingleWriteMultiRead);
     setPrototypeMethod(isolate, t, v8::String::NewFromUtf8(isolate, "createGroup", v8::NewStringType::kInternalized).ToLocalChecked(), CreateGroup);
     setPrototypeMethod(isolate, t, v8::String::NewFromUtf8(isolate, "openGroup", v8::NewStringType::kInternalized).ToLocalChecked(), OpenGroup);
+    setPrototypeMethod(isolate, t, v8::String::NewFromUtf8(isolate, "openDataset", v8::NewStringType::kInternalized).ToLocalChecked(), OpenDataset);
     setPrototypeMethod(isolate, t, v8::String::NewFromUtf8(isolate, "getNumAttrs", v8::NewStringType::kInternalized).ToLocalChecked(), GetNumAttrs);
     setPrototypeMethod(isolate, t, v8::String::NewFromUtf8(isolate, "getAttributeNames", v8::NewStringType::kInternalized).ToLocalChecked(), getAttributeNames);
     setPrototypeMethod(isolate, t, v8::String::NewFromUtf8(isolate, "readAttribute", v8::NewStringType::kInternalized).ToLocalChecked(), readAttribute);
@@ -423,6 +431,33 @@ namespace NodeHDF5 {
       return;
     }
     
+  }
+void File::OpenDataset(const v8::FunctionCallbackInfo<Value>& args) {
+    v8::Isolate* isolate = args.GetIsolate();
+    v8::Local<v8::Context> context = isolate->GetCurrentContext();
+
+    // fail out if arguments are not correct
+    if (args.Length() != 1 || !args[0]->IsString()) {
+      v8::Isolate::GetCurrent()->ThrowException(
+          v8::Exception::Error(String::NewFromUtf8(v8::Isolate::GetCurrent(), "expected name", v8::NewStringType::kInternalized).ToLocalChecked()));
+      args.GetReturnValue().SetUndefined();
+      return;
+    }
+
+    try {
+      String::Utf8Value dataset_name(isolate, args[0]->ToString(context).ToLocalChecked());
+      Local<Object> instance = Dataset::Instantiate(*dataset_name, args.This(), args[1]->Uint32Value(context).ToChecked());
+      args.GetReturnValue().Set(instance);
+      return;
+    } catch (Exception& ex) {
+      v8::Isolate::GetCurrent()->ThrowException(v8::Exception::Error(String::NewFromUtf8(v8::Isolate::GetCurrent(), ex.what(), v8::NewStringType::kInternalized).ToLocalChecked()));
+      args.GetReturnValue().SetUndefined();
+      return;
+    } catch (std::exception& ex) {
+      v8::Isolate::GetCurrent()->ThrowException(v8::Exception::Error(String::NewFromUtf8(v8::Isolate::GetCurrent(), ex.what(), v8::NewStringType::kInternalized).ToLocalChecked()));
+      args.GetReturnValue().SetUndefined();
+      return;
+    }
   }
 
   void File::Move(const v8::FunctionCallbackInfo<Value>& args) {
