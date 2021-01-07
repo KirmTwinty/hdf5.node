@@ -341,10 +341,10 @@ namespace NodeHDF5 {
 
     hid_t type_id = H5Tget_native_type(t, H5T_DIR_ASCEND);
     hid_t memspace_id  = H5S_ALL;
-    hid_t basetype_id  = H5Tget_super(type_id);
     int err;
     switch (class_id) {
     case H5T_ARRAY: {
+      hid_t basetype_id  = H5Tget_super(type_id);
       int                        arrayRank    = H5Tget_array_ndims(type_id);
       std::unique_ptr<hsize_t[]> arrayDims(new hsize_t[arrayRank]);
       H5Tget_array_dims(type_id, arrayDims.get());
@@ -388,6 +388,7 @@ namespace NodeHDF5 {
     } break;
     case H5T_STRING: {
       if (H5Tis_variable_str(type_id)>0) {
+	hid_t basetype_id  = H5Tget_super(type_id);
 	if(subsetOn){
 	  std::unique_ptr<hsize_t[]> maxsize(new hsize_t[rank]);
 	  for(int rankIndex=0;rankIndex<rank;rankIndex++)

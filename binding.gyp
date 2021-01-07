@@ -28,7 +28,8 @@
                     'src/methods.cc',
                     'src/h5_file.cc',
                     'src/h5_group.cc',
-                    'src/reference.cc'
+                    'src/reference.cc',
+		    'src/h5_dataset.cc'
                 ],
                 'link_settings': {
                     'libraries': [
@@ -58,6 +59,7 @@
                     'src/methods.cc',
                     'src/h5_file.cc',
                     'src/h5_group.cc',
+                    'src/h5_dataset.cc',
                     'src/reference.cc'
                 ],
                 "configurations": {
@@ -109,6 +111,7 @@
                     'src/methods.cc',
                     'src/h5_file.cc',
                     'src/h5_group.cc',
+                    'src/h5_dataset.cc',
                     'src/reference.cc'
                 ],
                 'link_settings': {
