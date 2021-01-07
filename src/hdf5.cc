@@ -2,6 +2,7 @@
 #include "hdf5V8.hpp"
 #include "file.h"
 #include "group.h"
+#include "dataset.h"
 #include "filters.hpp"
 #include "reference.hpp"
 #include "hdf5node.hpp"
@@ -28,6 +29,7 @@ static void init(v8::Local<v8::Object> target) {
 
   // initialize wrapped object factories
   Group::Initialize();
+  Dataset::Initialize();
 }
 
 NODE_MODULE(hdf5, init)
