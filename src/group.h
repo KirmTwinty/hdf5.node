@@ -39,6 +39,11 @@ namespace NodeHDF5 {
 
   public:
     Group(hid_t id);
+
+    hid_t getId() {
+      return id;
+    };
+
     static void          Initialize();
     static Local<Object> Instantiate(Local<Object> file);
     static Local<Object> Instantiate(const char* path, Local<Object> file, unsigned long creationOrder = 0);
@@ -46,11 +51,13 @@ namespace NodeHDF5 {
     static void Create(const v8::FunctionCallbackInfo<Value>& args);
     static void Open(const v8::FunctionCallbackInfo<Value>& args);
     static void OpenGroup(const v8::FunctionCallbackInfo<Value>& args);
+    static void OpenDataset(const v8::FunctionCallbackInfo<Value>& args);
     static void Copy(const v8::FunctionCallbackInfo<Value>& args);
     static void Move(const v8::FunctionCallbackInfo<Value>& args);
     static void Link(const v8::FunctionCallbackInfo<Value>& args);
     static void Delete(const v8::FunctionCallbackInfo<Value>& args);
     static void Close(const v8::FunctionCallbackInfo<Value>& args);
+    static void Refresh(const v8::FunctionCallbackInfo<Value>& args);
 
   protected:
   };

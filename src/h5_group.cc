@@ -10,6 +10,7 @@
 #include "hdf5V8.hpp"
 #include "file.h"
 #include "group.h"
+#include "dataset.h"
 #include "int64.hpp"
 #include "filters.hpp"
 #include "H5LTpublic.h"
@@ -60,6 +61,7 @@ namespace NodeHDF5 {
     setPrototypeMethod(isolate, t, v8::String::NewFromUtf8(isolate, "create", v8::NewStringType::kInternalized).ToLocalChecked(), Create);
     setPrototypeMethod(isolate, t, v8::String::NewFromUtf8(isolate, "open", v8::NewStringType::kInternalized).ToLocalChecked(), Open);
     setPrototypeMethod(isolate, t, v8::String::NewFromUtf8(isolate, "openGroup", v8::NewStringType::kInternalized).ToLocalChecked(), OpenGroup);
+    setPrototypeMethod(isolate, t, v8::String::NewFromUtf8(isolate, "openDataset", v8::NewStringType::kInternalized).ToLocalChecked(), OpenDataset);
     setPrototypeMethod(isolate, t, v8::String::NewFromUtf8(isolate, "refresh", v8::NewStringType::kInternalized).ToLocalChecked(), Refresh);
     setPrototypeMethod(isolate, t, v8::String::NewFromUtf8(isolate, "flush", v8::NewStringType::kInternalized).ToLocalChecked(), Flush);
     setPrototypeMethod(isolate, t, v8::String::NewFromUtf8(isolate, "copy", v8::NewStringType::kInternalized).ToLocalChecked(), Copy);
@@ -448,7 +450,51 @@ namespace NodeHDF5 {
       return;
     }
   }
+  void Group::OpenDataset(const v8::FunctionCallbackInfo<Value>& args) {
+    v8::Isolate* isolate = args.GetIsolate();
+    v8::Local<v8::Context> context = isolate->GetCurrentContext();
 
+    // fail out if arguments are not correct
+    if (args.Length() != 1 || !args[0]->IsString()) {
+      v8::Isolate::GetCurrent()->ThrowException(
+          v8::Exception::Error(String::NewFromUtf8(v8::Isolate::GetCurrent(), "expected name", v8::NewStringType::kInternalized).ToLocalChecked()));
+      args.GetReturnValue().SetUndefined();
+      return;
+    }
+
+    try {
+      String::Utf8Value dataset_name(isolate, args[0]->ToString(context).ToLocalChecked());
+      Local<Object> instance = Dataset::Instantiate(*dataset_name, args.This(), args[1]->Uint32Value(context).ToChecked());
+      args.GetReturnValue().Set(instance);
+      return;
+    } catch (Exception& ex) {
+      v8::Isolate::GetCurrent()->ThrowException(v8::Exception::Error(String::NewFromUtf8(v8::Isolate::GetCurrent(), ex.what(), v8::NewStringType::kInternalized).ToLocalChecked()));
+      args.GetReturnValue().SetUndefined();
+      return;
+    } catch (std::exception& ex) {
+      v8::Isolate::GetCurrent()->ThrowException(v8::Exception::Error(String::NewFromUtf8(v8::Isolate::GetCurrent(), ex.what(), v8::NewStringType::kInternalized).ToLocalChecked()));
+      args.GetReturnValue().SetUndefined();
+      return;
+    }
+  }
+  void Group::Refresh(const v8::FunctionCallbackInfo<Value>& args){
+    if (args.Length() > 0) {
+
+      v8::Isolate::GetCurrent()->ThrowException(
+          v8::Exception::Error(v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), "expected arguments", v8::NewStringType::kInternalized).ToLocalChecked()));
+      args.GetReturnValue().SetUndefined();
+      return;
+    }
+
+    // unwrap group
+    Group* group = ObjectWrap::Unwrap<Group>(args.This());
+    herr_t err = H5Grefresh(group->id);
+    if (err < 0) {
+      v8::Isolate::GetCurrent()->ThrowException(v8::Exception::Error(String::NewFromUtf8(v8::Isolate::GetCurrent(), "Failed to refresh group", v8::NewStringType::kInternalized).ToLocalChecked()));
+	return;
+    }
+    return;
+  }
   void Group::Copy(const v8::FunctionCallbackInfo<Value>& args) {
     v8::Isolate* isolate = args.GetIsolate();
     v8::Local<v8::Context> context = isolate->GetCurrentContext();
