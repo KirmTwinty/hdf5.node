@@ -1,0 +1,10 @@
+* Run the SWMR test
+*With a valid installation*
+
+1. In a shell, launch the script =./python_writer_reader.sh=
+2. In another shell, launch the script =./node_reader.sh=
+
+Those commands will launch 3 processes that will work on the =swmr.hdf5= file: 
+- A Python writer 
+- A Python reader
+- A NodeJS reader

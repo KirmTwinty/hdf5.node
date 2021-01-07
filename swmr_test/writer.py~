@@ -1,0 +1,6 @@
+  /home/ttoullie/Documents/Misc/git/hdf5.node/swmr_test:
+  total used in directory 24K available 5427160
+  drwxrwxr-x 2 ttoullie ttoullie 4,0K janv.  7 16:44 .
+  drwxrwxr-x 7 ttoullie ttoullie 4,0K janv.  7 16:39 ..
+  -rw-rw-r-- 1 ttoullie ttoullie   25 janv.  7 16:42 node_reader.sh
+  -rw-rw-r-- 1 ttoullie ttoullie   28 janv.  7 16:42 
