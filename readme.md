@@ -41,10 +41,11 @@ var filename = '<hdf5_file.h5>';
 var file = new hdf5.File(filename, Access.ACC_SWMR_READ);
 var dataset = file.openDataset('test_group/data');
 
-function iteration(i) {
-    var arr = dataset.read();
+function iteration(i) {	
+    var buffer = dataset.read();
+	var arr = Array.prototype.slice.call(buffer, 0);
     dataset.refresh();
-    console.log(arr)
+    console.log(arr.length);
     if (i < 30) {
 		setTimeout(iteration, 1000, i+1);
     }else{
