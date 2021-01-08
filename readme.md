@@ -43,7 +43,7 @@ var dataset = file.openDataset('test_group/data');
 
 function iteration(i) {	
     var buffer = dataset.read();
-	var arr = Array.prototype.slice.call(buffer, 0);
+    var arr = Array.prototype.slice.call(buffer, 0);
     dataset.refresh();
     console.log(arr.length);
     if (i < 30) {
