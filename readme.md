@@ -11,7 +11,23 @@ HDF5 is a node module for reading and writing the
 This fork is a first attemp to put SWMR working with the <http://hdf-ni.github.io/hdf5.node> library.
 Actually, only simple reading is implemented.
 
-Test:
+To make a full test you will need a writer. This is achieved with Python.
+
+### Automatic test
+
+To test all the library, you can run:
+
+```sh
+npm test
+```
+
+or just the swmr part:
+
+```sh
+TEST=swmr npm test
+```
+
+### Manual test
 
 Run a Python writer as given in [h5py documentation](https://docs.h5py.org/en/stable/swmr.html) for instance.
 Then, the following script should update the dataset size at each iteration: 
@@ -20,7 +36,7 @@ var hdf5 = require('hdf5').hdf5;
 var h5lt = require('hdf5').h5lt;
 
 var Access = require('hdf5/lib/globals').Access;
-var filename = '/home/ttoullie/Documents/Code/test_hdf5_swmr/node/swmr.hdf5';
+var filename = '<hdf5_file.h5>';
 
 var file = new hdf5.File(filename, Access.ACC_SWMR_READ);
 var dataset = file.openDataset('test_group/data');
