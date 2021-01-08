@@ -13,11 +13,12 @@
   "devDependencies": {
     "mocha": "5.1.1",
     "should": "*",
+    "util": "^0.12.3",
     "xml2js": "*"
   },
   "scripts": {
     "install": "node-gyp rebuild --jobs max",
-    "test": "mocha test"
+    "test": "mocha ./test/test_*$TEST*.js"
   },
   "contributors": [
     "Ryan Cole <ryan@rycole.com> (https://github.com/ryancole/)",

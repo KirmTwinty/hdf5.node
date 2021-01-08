@@ -79,7 +79,7 @@ class SwmrWriter(Process):
             self._event.set()
 
             # Write loop
-            for i in range(20):
+            for i in range(6):
                 new_shape = ((i+1) * len(arr), )
                 self.log.info("Resizing dset shape: %s"%str(new_shape))
                 dset.resize( new_shape )
@@ -99,7 +99,7 @@ class SwmrWriter(Process):
 if __name__ == "__main__":
     if h5py.version.hdf5_version > '1.10':
         logging.basicConfig(format='%(levelname)10s  %(asctime)s  %(name)10s  %(message)s',level=logging.INFO)
-        fname = 'swmr.hdf5'
+        fname = 'test/examples/swmr.h5'
         grpname = 'test_group'
         dsetname = 'data'
         if len(sys.argv) > 1:
