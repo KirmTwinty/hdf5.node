@@ -30,7 +30,7 @@ TEST=swmr npm test
 ### Manual test
 
 Run a Python writer as given in [h5py documentation](https://docs.h5py.org/en/stable/swmr.html) for instance.
-Then, the following script should update the dataset size at each iteration: 
+Then, the following script should see the updated dataset size at each iteration: 
 ```javascript
 var hdf5 = require('hdf5').hdf5;
 var h5lt = require('hdf5').h5lt;
